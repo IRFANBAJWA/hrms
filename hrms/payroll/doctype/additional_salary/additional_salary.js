@@ -55,18 +55,18 @@ frappe.ui.form.on('Additional Salary', {
 		frm.trigger('set_component_query');
 	},
 
-	set_component_query: function(frm) {
-		if (!frm.doc.company) return;
-		let filters = {company: frm.doc.company};
-		if (frm.doc.type) {
-			filters.type = frm.doc.type;
-		}
-		frm.set_query("salary_component", function() {
-			return {
-				filters: filters
-			};
-		});
-	},
+	// set_component_query: function(frm) {
+	// 	if (!frm.doc.company) return;
+	// 	let filters = {company: frm.doc.company};
+	// 	if (frm.doc.type) {
+	// 		filters.type = frm.doc.type;
+	// 	}
+	// 	frm.set_query("salary_component", function() {
+	// 		return {
+	// 			filters: filters
+	// 		};
+	// 	});
+	// },
 
 	get_employee_currency: function(frm) {
 		frappe.call({
