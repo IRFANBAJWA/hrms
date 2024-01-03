@@ -46,24 +46,25 @@ def set_loan_repayment(doc: "SalarySlip"):
 					},
 				)
 
-	for payment in doc.get("loans"):
-		amounts = calculate_amounts(payment.loan, doc.posting_date, "Regular Payment")
-		total_amount = amounts["interest_amount"] + amounts["payable_principal_amount"]
-		if payment.total_payment > total_amount:
-			frappe.throw(
-				_(
-					"""Row {0}: Paid amount {1} is greater than pending accrued amount {2} against loan {3}"""
-				).format(
-					payment.idx,
-					frappe.bold(payment.total_payment),
-					frappe.bold(total_amount),
-					frappe.bold(payment.loan),
+	if doc.get("loans"):
+		for payment in doc.get("loans"):
+			amounts = calculate_amounts(payment.loan, doc.posting_date, "Regular Payment")
+			total_amount = amounts["interest_amount"] + amounts["payable_principal_amount"]
+			if payment.total_payment > total_amount:
+				frappe.throw(
+					_(
+						"""Row {0}: Paid amount {1} is greater than pending accrued amount {2} against loan {3}"""
+					).format(
+						payment.idx,
+						frappe.bold(payment.total_payment),
+						frappe.bold(total_amount),
+						frappe.bold(payment.loan),
+					)
 				)
-			)
 
-		doc.total_interest_amount += payment.interest_amount
-		doc.total_principal_amount += payment.principal_amount
-		doc.total_loan_repayment += payment.total_payment
+			doc.total_interest_amount += payment.interest_amount
+			doc.total_principal_amount += payment.principal_amount
+			doc.total_loan_repayment += payment.total_payment
 
 
 def _get_loan_details(doc: "SalarySlip"):
@@ -77,7 +78,7 @@ def _get_loan_details(doc: "SalarySlip"):
 		filters={
 			"applicant": doc.employee,
 			"docstatus": 1,
-			"repay_from_salary": 1,
+			# "repay_from_salary": 1,
 			"company": doc.company,
 			"status": ("!=", "Closed"),
 		},
