@@ -103,28 +103,29 @@ def make_loan_repayment_entry(doc: "SalarySlip"):
 		"Payroll Settings", "process_payroll_accounting_entry_based_on_employee"
 	)
 
-	for loan in doc.loans:
-		if not loan.total_payment:
-			continue
+	if doc.get('loans'):
+		for loan in doc.loans:
+			if not loan.total_payment:
+				continue
 
-		repayment_entry = create_repayment_entry(
-			loan.loan,
-			doc.employee,
-			doc.company,
-			doc.posting_date,
-			loan.loan_product,
-			"Regular Payment",
-			loan.interest_amount,
-			loan.principal_amount,
-			loan.total_payment,
-			payroll_payable_account=payroll_payable_account,
-			process_payroll_accounting_entry_based_on_employee=process_payroll_accounting_entry_based_on_employee,
-		)
+			repayment_entry = create_repayment_entry(
+				loan.loan,
+				doc.employee,
+				doc.company,
+				doc.posting_date,
+				loan.loan_product,
+				"Regular Payment",
+				loan.interest_amount,
+				loan.principal_amount,
+				loan.total_payment,
+				payroll_payable_account=payroll_payable_account,
+				process_payroll_accounting_entry_based_on_employee=process_payroll_accounting_entry_based_on_employee,
+			)
 
-		repayment_entry.save()
-		repayment_entry.submit()
+			repayment_entry.save()
+			repayment_entry.submit()
 
-		frappe.db.set_value("Salary Slip Loan", loan.name, "loan_repayment_entry", repayment_entry.name)
+			frappe.db.set_value("Salary Slip Loan", loan.name, "loan_repayment_entry", repayment_entry.name)
 
 
 @if_lending_app_installed
