@@ -100,7 +100,7 @@ def make_loan_repayment_entry(doc: "SalarySlip"):
 
 	payroll_payable_account = get_payroll_payable_account(doc.company, doc.payroll_entry)
 	process_payroll_accounting_entry_based_on_employee = frappe.db.get_single_value(
-		"Payroll Settings", "process_payroll_accounting_entry_based_on_employee"
+		"Payroll Settings", "prcancel_loan_repayment_entryocess_payroll_accounting_entry_based_on_employee"
 	)
 
 	if doc.get('loans'):
@@ -130,10 +130,11 @@ def make_loan_repayment_entry(doc: "SalarySlip"):
 
 @if_lending_app_installed
 def cancel_loan_repayment_entry(doc: "SalarySlip"):
-	for loan in doc.loans:
-		if loan.loan_repayment_entry:
-			repayment_entry = frappe.get_doc("Loan Repayment", loan.loan_repayment_entry)
-			repayment_entry.cancel()
+	if doc.get('loans'):
+		for loan in doc.loans:
+			if loan.loan_repayment_entry:
+				repayment_entry = frappe.get_doc("Loan Repayment", loan.loan_repayment_entry)
+				repayment_entry.cancel()
 
 
 def get_payroll_payable_account(company, payroll_entry):
