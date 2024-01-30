@@ -78,7 +78,7 @@ def _get_loan_details(doc: "SalarySlip"):
 		filters={
 			"applicant": doc.employee,
 			"docstatus": 1,
-			# "repay_from_salary": 1,
+			"repay_from_salary": 1,
 			"company": doc.company,
 			"status": ("!=", "Closed"),
 		},
@@ -102,7 +102,8 @@ def make_loan_repayment_entry(doc: "SalarySlip"):
 	process_payroll_accounting_entry_based_on_employee = frappe.db.get_single_value(
 		"Payroll Settings", "prcancel_loan_repayment_entryocess_payroll_accounting_entry_based_on_employee"
 	)
-
+	if process_payroll_accounting_entry_based_on_employee == None:
+		process_payroll_accounting_entry_based_on_employee = 0
 	if doc.get('loans'):
 		for loan in doc.loans:
 			if not loan.total_payment:
