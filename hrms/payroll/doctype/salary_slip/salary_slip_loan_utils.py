@@ -99,11 +99,11 @@ def make_loan_repayment_entry(doc: "SalarySlip"):
 	from lending.loan_management.doctype.loan_repayment.loan_repayment import create_repayment_entry
 
 	payroll_payable_account = get_payroll_payable_account(doc.company, doc.payroll_entry)
-	process_payroll_accounting_entry_based_on_employee = frappe.db.get_single_value(
-		"Payroll Settings", "prcancel_loan_repayment_entryocess_payroll_accounting_entry_based_on_employee"
-	)
-	if process_payroll_accounting_entry_based_on_employee == None:
-		process_payroll_accounting_entry_based_on_employee = 0
+	# process_payroll_accounting_entry_based_on_employee = frappe.db.get_single_value(
+	# 	"Payroll Settings", "prcancel_loan_repayment_entryocess_payroll_accounting_entry_based_on_employee"
+	# )
+	# if process_payroll_accounting_entry_based_on_employee == None:
+	process_payroll_accounting_entry_based_on_employee = 0
 	if doc.get('loans'):
 		for loan in doc.loans:
 			if not loan.total_payment:
